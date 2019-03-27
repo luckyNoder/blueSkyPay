@@ -1,5 +1,5 @@
 import {
-  login,
+  // login,
   logout,
   getUserInfo,
   getMessage,
@@ -10,9 +10,11 @@ import {
   getUnreadCount
 } from '@/api/user'
 import { setToken, getToken } from '@/libs/util'
+import { adminLogin } from '@/api/admin'
 
 export default {
   state: {
+    userInfo: {}, // 登录人的信息
     userName: '',
     userId: '',
     avatarImgPath: '',
@@ -26,6 +28,9 @@ export default {
     messageContentStore: {}
   },
   mutations: {
+    setUserInfo (state, userInfo) {
+      state.userInfo = userInfo
+    },
     setAvatar (state, avatarPath) {
       state.avatarImgPath = avatarPath
     },
@@ -75,15 +80,21 @@ export default {
   actions: {
     // 登录
     handleLogin ({ commit }, { userName, password }) {
+      debugger
       userName = userName.trim()
       return new Promise((resolve, reject) => {
-        login({
-          userName,
+        adminLogin({
+          account: userName,
           password
         }).then(res => {
-          const data = res.data
-          commit('setToken', data.token)
-          resolve()
+          if (res.data.code === 200) {
+            const data = res.data.info
+            commit('setToken', data.Token)
+            commit('setUserInfo', data)
+            resolve()
+          } else {
+            throw Error('登录失败')
+          }
         }).catch(err => {
           reject(err)
         })
