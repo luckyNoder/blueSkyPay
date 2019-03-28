@@ -35,6 +35,7 @@
 
 <script>
 import {adminlogin} from '../../api/index.js'
+import {setToken} from '@/libs/util.js'
 export default {
     data() {
         return {
@@ -55,7 +56,6 @@ export default {
     methods: {
         handleSubmit() {
             var _this = this
-            debugger
             this.$refs["loginForm"].validate(valid => {
                 if (valid) {
                     // this.$Message.success("Success!")
@@ -65,7 +65,11 @@ export default {
                     }
                     console.log(params)
                     adminlogin('/login/admin',params).then(res =>{
-                        debugger
+                        if(res.code === 200){
+                            setToken(res.info.Token)
+                            debugger
+                            this.$router.push('/')
+                        }
                     })
                 }
             });
