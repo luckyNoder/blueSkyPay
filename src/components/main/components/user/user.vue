@@ -35,11 +35,10 @@ export default {
       'handleLogOut'
     ]),
     logout () {
-      this.handleLogOut().then(() => {
+        debugger
         this.$router.push({
           name: 'login'
         })
-      })
     },
     message () {
       this.$router.push({
