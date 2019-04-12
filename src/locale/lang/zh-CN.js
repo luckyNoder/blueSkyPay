@@ -44,5 +44,6 @@ export default {
   drag_drawer_page: '可拖动抽屉',
   tree_select_page: '树状下拉选择器',
   adminList:'管理员列表',
-  commercialer:'商户中心'
+  commercialer:'商户中心',
+  adminOrderList:'所有订单列表'
 }

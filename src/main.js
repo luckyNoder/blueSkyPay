@@ -15,6 +15,7 @@ import '@/assets/icons/iconfont.css'
 import TreeTable from 'tree-table-vue'
 import VOrgTree from 'v-org-tree'
 import 'v-org-tree/dist/v-org-tree.css'
+import moment from 'moment'
 // import layer from 'layer'
 // 实际打包时应该不引入mock
 /* eslint-disable */
@@ -44,6 +45,24 @@ Vue.prototype.$config = config
  */
 importDirective(Vue)
 Vue.directive('clickOutside', clickOutside)
+
+/**
+ * 全局的过滤器
+*/
+Vue.filter('formatMoment',(value) =>{
+    if(!value){
+        return ''
+    }
+    return value.slice(0,10)
+})
+Vue.filter('formatMenoy',(value) =>{
+    if(!value){
+        return ''
+    }
+    var result = (value/100).toFixed(2)
+    return result
+})
+
 
 /* eslint-disable no-new */
 new Vue({

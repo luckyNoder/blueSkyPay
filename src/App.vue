@@ -13,14 +13,14 @@ export default {
 
   },
   methods:{
-      initAxios(){
-            const token = sessionStorage['token']
-            axios.defaults.baseURL = 'http://47.100.161.132:8181';
-            if(token) {
-                axios.defaults.headers.common['authorization'] = "Bearer "+ token
-            }
-            axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-      }
+    //   initAxios(){
+    //         const token = sessionStorage['token']
+    //         axios.defaults.baseURL = 'http://47.100.161.132:8181';
+    //         if(token) {
+    //             axios.defaults.headers.common['authorization'] = "Bearer "+ token
+    //         }
+    //         axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    //   }
   }
 }
 </script>

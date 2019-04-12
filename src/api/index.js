@@ -31,7 +31,6 @@ axios.interceptors.response.use(function (response) {
 
 
 export function adminlogin(url,data = {}){
-    debugger
     return new Promise((resolve, reject) => {
         axios.post(url,data)
         .then(res => {
@@ -57,6 +56,92 @@ export const addAdmin = (url,data) =>{
     return new Promise((resolve, reject) => {
         axios.post(url, data)
         .then(res => {
+            resolve(res.data);
+        })
+    })
+}
+export const deleteAdmin = (url,data) =>{
+    return new Promise((resolve, reject) => {
+        axios.get(url + '/'+ data )
+        .then(res => {
+            resolve(res.data);
+        })
+    })
+}
+
+export const updateAdminPass =  (url,data)=>{
+    return new Promise((resolve, reject) => {
+        axios.post(url, data)
+        .then(res => {
+            resolve(res.data);
+        })
+    })
+}
+
+// /admin/order/list/1
+export const allOrderListFun =  (url,data)=>{
+    return new Promise((resolve, reject) => {
+        axios.get(url,  {params: data})
+        .then(res => {
+            resolve(res.data);
+        })
+    })
+}
+/**
+ * business  商户列表的增删改查
+*/
+
+// 获取商户列表
+export const businessList = (url , data ) =>{
+    return new Promise((resolve, reject) => {
+        axios.get(url,  {params: data})
+        .then(res => {
+            resolve(res.data);
+        })
+    })
+}
+
+// 新增商户
+export const addBusiness = (url , data ) =>{
+    return new Promise((resolve, reject) => {
+        axios.post(url, data).then(res => {
+            resolve(res.data);
+        })
+    })
+}
+
+// 删除用户
+export const deleteBusiness = (url , data ) =>{
+    return new Promise((resolve, reject) => {
+        axios.get(url + '/'+ data ).then(res => {
+            resolve(res.data);
+        })
+    })
+}
+
+//审核用户
+export const  checkBusniess = (url , data ) =>{
+    return new Promise((resolve, reject) => {
+        axios.post(url, data).then(res => {
+            resolve(res.data);
+        })
+    })
+}
+
+// 修改用户信息
+export const infoUpdateFun = (url , data ) =>{
+    return new Promise((resolve, reject) => {
+        axios.post(url, data).then(res => {
+            resolve(res.data);
+        })
+    })
+}
+
+// 修改商户密码
+
+export const updatePassFun = (url , data ) =>{
+    return new Promise((resolve, reject) => {
+        axios.post(url, data).then(res => {
             resolve(res.data);
         })
     })

@@ -22,6 +22,12 @@
                                 </span>
                             </Input>
                         </FormItem>
+                         <FormItem >
+                            <RadioGroup v-model="form.animal">
+                                <Radio label="管理员登录"></Radio>
+                                <Radio label="商户登录"></Radio>
+                            </RadioGroup>
+                         </FormItem>
                         <FormItem>
                             <Button @click="handleSubmit" type="primary" long>登录</Button>
                         </FormItem>
@@ -40,8 +46,9 @@ export default {
     data() {
         return {
             form: {
-                userName: "admin",
-                password: "admin"
+                userName: this.userName,
+                password: this.password,
+                animal:''
             },
             rules: {
                 userName: [
@@ -56,21 +63,31 @@ export default {
     methods: {
         handleSubmit() {
             var _this = this
+            // if(!this.form.animal ){
+            //     debugger
+            //      this.$Message.info('请填写登录角色')
+            //      return
+            // }
             this.$refs["loginForm"].validate(valid => {
                 if (valid) {
-                    // this.$Message.success("Success!")
                     let params = {
                         account:_this.form.userName,
                         password:_this.form.password
                     }
-                    console.log(params)
-                    adminlogin('/login/admin',params).then(res =>{
-                        if(res.code === 200){
-                            setToken(res.info.Token)
-                            debugger
-                            this.$router.push('/')
-                        }
-                    })
+                    if(!this.form.animal ){
+                        this.$Message.info('请填写登录角色')
+                        return
+                    }
+                    if(this.form.animal === '管理员登录'){
+                         adminlogin('/login/admin',params).then(res =>{
+                            if(res.code === 200){
+                                setToken(res.info.Token)
+                                this.$router.push('/')
+                            }else{
+                                this.$Message.warning(res.info)
+                            }
+                        })
+                    }
                 }
             });
         }

@@ -1,370 +1,379 @@
 <template>
-    <div style="min-height:100vh">
+    <div>
         <Card shadow>
             <div class="search_box">
                 <Form :label-width="80">
-                    <FormItem label="用户名" class="search_item">
-                        <Input type="text" v-model="search.username" placeholder="用户名" style="width:150px">
-                        </Input>
-                    </FormItem>
-                    <FormItem label="昵称搜索" class="search_item">
-                        <Input type="text" v-model="search.username" placeholder="昵称" style="width:150px">
-                        </Input>
-                    </FormItem>
-                    <FormItem  class="search_item">
-                        <Button type="primary">搜索</Button>
-                        <Button type="error" style="margin-left:10px" @click="addAdmin">新增管理员用户</Button>
-                    </FormItem>
+                    <Button type="error" style="margin-left:10px" @click="addBusniess">新增商户</Button>
                 </Form>
             </div>
         </Card>
         <Card shadow style="margin-top:10px">
-            <Row style="margin-bottom: 20px;"><Button type="primary" @click="addUser">添加用户</Button></Row>
             <Row class="adminList_wrapper">
                 <Col span="24">
-                    <Table :columns="columns1" :data="data1"></Table>
+                    <Table :columns="columns" :data="data">
+                        <template slot-scope="{ row, index }" slot="action">
+                            <Button type="primary" size="small" style="margin-right: 5px" @click="checkBusniess(row)">审核</Button>
+                            <Button type="primary" size="small" style="margin-right: 5px" @click="infoUpdate(row)">信息修改</Button>
+                            <Button type="primary" size="small" style="margin-right: 5px" @click="updatePass(row)">重置密码</Button>
+                            <Poptip confirm title="你确定要删除吗?" @on-ok="okdelect(row)" >
+                                <Button type="primary" size="small">删除</Button>
+                            </Poptip>
+                        </template>
+                        <template slot-scope="{ row, index }" slot="Status">
+                                <span v-if="row.Status === 0" style="color:#ff9900;">待审核</span>
+                                <span v-if="row.Status === 1" style="color:#19be6b">正常</span>
+                                <span v-if="row.Status === -1" style="color:#ed4014">冻结</span>
+                        </template>
+                        <template slot-scope="{ row, index }" slot="CreatedAtsolt">
+                            <span>{{row.CreatedAt | formatMoment}}</span>
+                        </template>
+                    </Table>
                 </Col>
             </Row>
-            <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                    <Page :total="total" :page-size="pageSize" :current="page" @on-change="changePage" show-total></Page>
-                </div>
-            </div>
         </Card>
-        <Modal v-model="isShowPass" title="修改密码" @on-ok="confirmModifyPass" >
-            <Form :model="formLeft" label-position="right" :label-width="80" style="width:300px;text-align:center">
-                <FormItem label="新密码">
-                    <Input v-model="formLeft.password"></Input>
+        <Modal v-model="addBusniessModel" :title='addorupdataTitle'  :mask-closable="false">
+              <Form ref="formInline" :model="formInline" :rules="ruleInline" :label-width="80" style="width:300px;text-align:center" label-position="left">
+                <FormItem prop="account" label='用户名'>
+                    <Input type="text" v-model="formInline.account" placeholder="请填写用户名">
+                    </Input>
                 </FormItem>
-                <FormItem label="确认密码">
-                    <Input v-model="formLeft.Repassword"></Input>
+                <FormItem prop="password" label='密码'>
+                    <Input type="text" v-model="formInline.password" placeholder="请填写密码">
+                    </Input>
                 </FormItem>
-            </Form>
-        </Modal>
-        <Modal v-model="isShowProfile" title="修改资料" @on-ok="confirmModifyProfile" >
-            <Form :model="profileForm" label-position="right" :label-width="80" style="width:300px;text-align:center">
-                <FormItem label="加密token" required>
-                    <Input v-model="profileForm.access_token"></Input>
+                <FormItem prop="Repassword" label='重复密码'>
+                    <Input type="text" v-model="formInline.Repassword" placeholder="请重复密码">
+                    </Input>
                 </FormItem>
-                <FormItem label="商户回调地址" required>
-                    <Input v-model="profileForm.callback_url"></Input>
+                 <FormItem prop="access_token" label='加密Token'>
+                    <Input type="text" v-model="formInline.access_token" placeholder="请填写加密Token">
+                    </Input>
                 </FormItem>
-            </Form>
-        </Modal>
-        <Modal v-model="isShowCheck" title="审核用户" @on-ok="confirmCheck">
-            <RadioGroup v-model="checkStatus">
-                <Radio  v-for="value in statusMap" :label="value[0]" :key="value[0]">{{value[1]}}</Radio>
-                <!--<Radio label="爪哇犀牛"></Radio>-->
-                <!--<Radio label="印度黑羚"></Radio>-->
-            </RadioGroup>
-        </Modal>
-        <Modal v-model="isAddUser" title="添加用户" @on-ok="confirmAddUser" >
-            <Form :model="userForm"  ref="userForm" :rules="ruleValidate" label-position="right" :label-width="100" style="width:300px;text-align:center">
-                <FormItem label="用户名" prop="account">
-                    <Input v-model="userForm.account"></Input>
-                </FormItem>
-                <FormItem label="密码" prop="password">
-                    <Input v-model="userForm.password"></Input>
-                </FormItem>
-                <FormItem label="确认密码" prop="Repassword">
-                    <Input v-model="userForm.Repassword"></Input>
-                </FormItem>
-                <FormItem label="加密Token" prop="access_token">
-                    <Input v-model="userForm.access_token"></Input>
-                </FormItem>
-                <FormItem label="商户回调地址" prop="callback_url">
-                    <Input v-model="userForm.callback_url"></Input>
+                <FormItem prop="callback_url" label='商户回调'>
+                    <Input type="text" v-model="formInline.callback_url" placeholder="请填写加密Token">
+                    </Input>
                 </FormItem>
             </Form>
+            <div slot="footer">
+                <Button type="error" @click="chanleModel('addBusniessModel')">取消</Button>
+                <Button type="info" @click="handleaddSubmit()">确认</Button>
+            </div>
+        </Modal>
+        <!-- 审核 -->
+        <Modal v-model="checkModel" width="360">
+            <p slot="header" style="color:#f60;text-align:center">
+                <span>审核操作</span>
+            </p>
+            <div style="text-align:center">
+                <RadioGroup v-model="busniessSatus">
+                    <Radio label="待审核"></Radio>
+                    <Radio label="正常"></Radio>
+                    <Radio label="冻结"></Radio>
+                </RadioGroup>
+            </div>
+            <div slot="footer">
+                <Button type="error" size="large" long  @click="checkBusniessSubmit">审核</Button>
+            </div>
+        </Modal>
+        <Modal v-model="infoUpdateModel" width="360"  :mask-closable="false">
+            <p slot="header" style="color:#f60;text-align:center">
+                <span>修改信息</span>
+            </p>
+            <div style="text-align:center">
+                 <Form :label-width="80"  label-position="left">
+                    <FormItem label='加密Token'>
+                        <Input type="text" v-model="infoUpdateObj.access_token" placeholder="Username">
+                        </Input>
+                    </FormItem>
+                    <FormItem label='商户回调'>
+                        <Input type="text" v-model="infoUpdateObj.callback_url" placeholder="Username">
+                        </Input>
+                    </FormItem>
+                 </Form>
+            </div>
+            <div slot="footer">
+                <Button type="error" size="large" long  @click="infoUpdateSubmit">修改</Button>
+            </div>
+        </Modal>
+        <!-- 修改密码 -->
+         <Modal v-model="updatePassModel" width="360"  :mask-closable="false">
+            <p slot="header" style="color:#f60;text-align:center">
+                <span>重置密码</span>
+            </p>
+            <div style="text-align:center">
+                 <Form :label-width="80"  label-position="left">
+                    <FormItem label='新密码'>
+                        <Input type="text" v-model="updatePassObj.password" placeholder="请填写新密码">
+                        </Input>
+                    </FormItem>
+                    <FormItem label='重复密码'>
+                        <Input type="text" v-model="updatePassObj.rePassword" placeholder="请重复新密码">
+                        </Input>
+                    </FormItem>
+                 </Form>
+            </div>
+            <div slot="footer">
+                <Button type="error" size="large" long  @click="updatePassSubmit">修改</Button>
+            </div>
         </Modal>
     </div>
 </template>
 <script>
-// import { adminlist, addAdmin } from '../../api/index.js'
-import { getUserList, deleteUser, modifyPass, updateUserInfo, verifyUser, addUser } from '../../api/userManage'
+import {businessList,addBusiness,deleteBusiness,checkBusniess,infoUpdateFun,updatePassFun} from '../../api/index.js'
 export default {
-  name: 'adminList',
-  data () {
-    return {
-      // 搜索字段
-      addModal: false,
-      isAddUser: false,
-      isShowPass: false,
-      isShowProfile: false,
-      isShowCheck: false,
-      checkStatus: 0,
-      operateUser: {},
-      search: {
-        username: ''
-      },
-      statusMap: new Map([[1, '正常'], [-1, '冻结'], [0, '待审核']]),
-      page: 1,
-      pageSize: 10,
-      total: 0,
-      userForm: {
-        account: '',
-        password: '',
-        Repassword: '',
-        access_token: '',
-        callback_url: ''
-      },
-      ruleValidate: {
-        account: [{
-          required: true, message: 'The name cannot be empty', trigger: 'blur'
-        }],
-        password: [{
-          required: true, message: 'The name cannot be empty', trigger: 'blur'
-        }],
-        Repassword: [{
-          required: true, message: 'The name cannot be empty', trigger: 'blur'
-        }],
-        access_token: [{
-          required: true, message: 'The name cannot be empty', trigger: 'blur'
-        }],
-        callback_url: [{
-          required: true, message: 'The name cannot be empty', trigger: 'blur'
-        }]
+    data() {
+        return {
+            updatePassModel:false,
+            infoUpdateModel:false,
+            checkModel:false,
+            busniessSatus:'',
+            businessItem:'',
+            addBusniessModel:false,
+            pageindex:0,
+            columns: [
+                {
+                    title: "用户名",
+                    key: "Account"
+                },
 
-      },
-      formLeft: {
-        password: '',
-        Repassword: ''
-      },
-      profileForm: {
-        access_token: '',
-        callback_url: ''
-      },
-      dark: 'light',
-      columns1: [
-        // {
-        //   type: 'selection',
-        //   width: 60,
-        //   align: 'center'
-        // },
-        {
-          title: '用户名',
-          key: 'Account'
-        },
-        {
-          title: '创建时间',
-          width: 200,
-          key: 'CreatedAt',
-          render: (h, params) => {
-            let time = new Date(params.row.CreatedAt).getTime()
-            let date = this.format(time)
-            // // let statusMap = new Map([[1, '正常'], [-1, '冻结'], [0, '待审核']])
-            return h('span', {
-              props: {}
-            }, date)
-          }
-        },
-        {
-          title: '用户状态',
-          width: 100,
-          key: 'Status',
-          render: (h, params) => {
-            let status = params.row.Status
-            console.log(params)
-            // let statusMap = new Map([[1, '正常'], [-1, '冻结'], [0, '待审核']])
-            return h('span', {
-              props: {}
-            }, this.statusMap.get(status))
-          }
-        },
-        {
-          title: 'token',
-          key: 'AccessToken'
-        },
-        {
-          title: '商户回调地址',
-          key: 'CallbackUrl'
-        },
-        {
-          title: '操作',
-          key: 'operate',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                style: {
-                  marginRight: '10px'
+                {
+                    title: "AccessToken",
+                    key: "AccessToken"
                 },
-                props: {
-                  type: 'primary',
-                  size: 'small'
+                {
+                    title: "回调地址",
+                    key: "CallbackUrl"
                 },
-                on: {
-                  click: () => {
-                    this.operateUser = params.row
-                    this.checkStatus = this.operateUser.Status
-                    this.isShowCheck = true
-                  }
+                 {
+                    title: "注册时间",
+                    slot: "CreatedAtsolt"
+                },
+                {
+                    title: "状态",
+                    slot: "Status"
+                },
+                {
+                    title: "操作",
+                    slot: "action"
                 }
-              }, '审核'),
-              h('Button', {
-                style: {
-                  marginRight: '10px'
-                },
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    // console.log(params)
-                    this.deleteUser(params.row.ID)
-                  }
-                }
-              }, '删除'), h('Button', {
-                style: {
-                  marginRight: '10px'
-                },
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.modifyProfile(params.row)
-                  }
-                }
-              }, '修改资料'),
-              h('Button', {
-                attrs: {
-                  style: {
-                    'margin-right': '10px'
-                  }
-                },
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.isShowPass = true
-                    this.operateUser = params.row
-                  }
-                }
-              }, '修改密码')
-            ])
-          }
-        }
-      ],
-      data1: []
-    }
-  },
-  created () {
-    this.getUserList()
-  },
-  methods: {
-    changePage (val) {
-      this.page = val
-      this.getUserList()
+            ],
+            data:[],
+            formInline:{
+                account:'',
+                password:'',
+                Repassword:'',
+                access_token:'',
+                callback_url:''
+            },
+            ruleInline:{
+                account:[
+                    { required: true, message: '账户名不能为空', trigger: 'blur' }
+                ],
+                password:[
+                     { required: true, message: '密码不能为空', trigger: 'blur' }
+                ],
+                Repassword:[
+                     { required: true, message: '重复密码不能为空', trigger: 'blur' }
+                ],
+                access_token:[
+                     { required: true, message: 'Token不能为空', trigger: 'blur' }
+                ],
+                callback_url:[
+                     { required: true, message: '回调地址不能为空', trigger: 'blur' }
+                ]
+            },
+            infoUpdateObj:{
+                access_token:'',
+                callback_url:''
+            },
+            infoUpdateItem:'',
+            updatePassObj:{
+                password:'',
+                rePassword:''
+            },
+            updatePassItem:''
+        };
     },
-    addUser () {
-      this.isAddUser = true
-    },
-    deleteUser (id) {
-      deleteUser(id).then(r => {
-        if (r.code === 200) {
-          this.$Message.success('This is a success tip')
-          this.page = 1
-          this.getUserList()
-        }
-      }).catch(() => {
-        this.$Message.error('This is a error tip')
-      })
-    },
-    confirmAddUser () {
-      debugger
-      this.$refs['userForm'].validate(valid => {
-        if (valid) {
-          addUser(this.userForm).then(r => {
-            if (r.code === 200) {
-              this.$Message.success('添加成功')
-              this.page = 1
-              this.getUserList(1)
+    computed:{
+        addorupdataTitle(){
+            if(this.addBusniessModel){
+                return '新增商户'
             }
-          })
-        } else {
-          this.$Message.success('添加失败')
         }
-      })
     },
-    add0 (m) { return m < 10 ? '0' + m : m },
-    format (shijianchuo) {
-      let time = new Date(shijianchuo)
-      let y = time.getFullYear()
-      let m = time.getMonth() + 1
-      let d = time.getDate()
-      let h = time.getHours()
-      let mm = time.getMinutes()
-      let s = time.getSeconds()
-      return y + '-' + this.add0(m) + '-' + this.add0(d) + ' ' + this.add0(h) + ':' + this.add0(mm) + ':' + this.add0(s)
+    created(){
+        this.getBusniessList()
     },
-    getUserList () {
-      let params = {
-        page: this.page
-      }
-      getUserList(params).then(r => {
-        if (r.code === 200) {
-          this.data1 = r.info.list
-          this.total = r.info.total
-          console.log(r.info.list)
-        }
-      })
-    },
-    modifyProfile (user) {
-      this.isShowProfile = true
-      this.operateUser = user
-      this.profileForm = {
-        access_token: user.AccessToken,
-        callback_url: user.CallbackUrl
-      }
-      console.log(params)
-    },
-    confirmModifyPass () {
-      let id = this.operateUser.ID
-      modifyPass(id, this.formLeft).then(r => {
-        if (r.code === 200) {
-          this.$Message.success('修改成功')
-          this.formLeft = {
-            password: '',
-            RePassword: ''
-          }
-          this.getUserList()
-        }
-      })
-    },
-    confirmModifyProfile () {
-      let id = this.operateUser.ID
-      updateUserInfo(id, this.profileForm).then(r => {
-        if (r.code === 200) {
-          debugger
-          this.$Message.success('修改成功')
-          this.getUserList()
-        }
-      })
-    },
-    confirmCheck () {
-      let id = this.operateUser.ID
-      let params = { status: this.checkStatus }
-      verifyUser(id, params).then(r => {
-        if (r.code === 200) {
-          this.$Message.success('修改成功')
-          this.getUserList()
-        }
-      })
-    },
-    addAdmin () {
-      this.addModal = true
-    },
-    addAdminSrue () {
-      debugger
-    }
-  }
-}
-</script>
+    methods:{
+        getBusniessList(){
+            businessList('/admin/user/list',{page:this.pageindex}).then(res =>{
+                this.data = res.info.list
+            })
+        },
+        addBusniess(){
+            this.addBusniessModel = true
+        },
+        handleaddSubmit(){
+            var _this = this
+            if(this.formInline.password !== this.formInline.Repassword){
+                this.$Message.error('2次密码不同样')
+                return false
+            }
+            this.$refs['formInline'].validate((valid) =>{
+                if(valid){
+                    var data = {
+                        account:this.formInline.account,
+                        password:this.formInline.password,
+                        Repassword:this.formInline.Repassword,
+                        access_token:this.formInline.access_token,
+                        callback_url:this.formInline.callback_url
+                    }
+                    addBusiness('/login/reg',data).then( res =>{
+                        if(res.code === 200){
+                            this.$Message.success({
+                                content:'添加成功',
+                                onClose(){
+                                    _this.addBusniessModel = false
+                                    _this.getBusniessList()
+                                }
+                            })
+                        }else{
+                             this.$Message.info(res.info)
+                        }
+                    })
+                }else{
 
-<style lang="less" scoped>
-    @import url("../adminList/index.less");
-</style>
+                }
+             })
+        },
+        // 关闭model层
+        chanleModel( type ){
+            this[type] = false
+            this.formInline = {}
+        },
+        okdelect( row ){
+            var _this = this
+            deleteBusiness('/admin/del/user',row.ID).then(res =>{
+                if(res.code === 200){
+                     this.$Message.success({
+                        content:'删除成功',
+                        onClose(){
+                            _this.getBusniessList()
+                        }
+                    })
+                }
+            })
+        },
+        checkBusniess(row){
+            this.businessItem = row
+            this.checkModel = true
+            switch (row.Status) {
+                case 1:
+                    this.busniessSatus = '正常'
+                    break;
+                case 0:
+                    this.busniessSatus = '待审核'
+                    break;
+                case -1:
+                    this.busniessSatus = '冻结'
+                    break;
+                default:
+                    break;
+            }
+        },
+        checkBusniessSubmit(){
+            var _this = this
+            var data  = {}
+            switch (this.busniessSatus) {
+                case "正常":
+                    data.status = 1
+                    break;
+                case "待审核":
+                    data.status = 0
+                    break;
+                case "冻结":
+                    data.status = -1
+                    break;
+                default:
+                    break;
+            }
+            var url = '/admin/user/verify/' + this.businessItem.ID
+            checkBusniess(url,data).then(res =>{
+                if(res.code === 200){
+                     this.$Message.success({
+                        content:'审核成功',
+                        onClose(){
+                            _this.checkModel = false
+                            _this.getBusniessList()
+                        }
+                    })
+                }
+            })
+        },
+        infoUpdate(item){
+            this.infoUpdateObj.access_token = item.AccessToken
+            this.infoUpdateObj.callback_url = item.CallbackUrl
+            this.infoUpdateItem = item
+            this.infoUpdateModel = true
+        },
+        infoUpdateSubmit(){
+            var _this = this
+            var url =  '/admin/user/update/'+this.infoUpdateItem.ID
+            if(!this.infoUpdateObj.access_token){
+                this.$Message.error('请填写Token信息')
+                return false
+            }
+            if(!this.infoUpdateObj.callback_url){
+                this.$Message.error('请填写回调地址')
+                return false
+            }
+            var data = {
+                access_token: this.infoUpdateObj.access_token,
+                callback_url:this.infoUpdateObj.callback_url
+            }
+            infoUpdateFun(url,data).then(res =>{
+                if(res.code === 200){
+                    this.$Message.success({
+                        content:'审核成功',
+                        onClose(){
+                            _this.infoUpdateModel = false
+                            _this.getBusniessList()
+                        }
+                    })
+                }
+            })
+        },
+        updatePass(item){
+            this.updatePassModel = true
+            this.updatePassItem = item
+        },
+        updatePassSubmit(){
+            var _this = this
+            var url = '/admin/update/user/password/'+ this.updatePassItem.ID
+            var data = {
+                password: this.updatePassObj.password,
+                Repassword:this.updatePassObj.rePassword
+            }
+            if(!this.updatePassObj.password){
+                this.$Message.error('请填写新密码')
+                return false
+            }
+            if(!this.updatePassObj.rePassword){
+                this.$Message.error('请填写重复新密码')
+                return false
+            }
+            updatePassFun(url,data).then(res =>{
+                if(res.code === 200){
+                    this.$Message.success({
+                        content:'修改成功',
+                        onClose(){
+                            _this.updatePassModel = false
+                            _this.getBusniessList()
+                        }
+                    })
+                }
+            })
+        }
+    }
+};
+</script>
