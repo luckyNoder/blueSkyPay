@@ -9,9 +9,8 @@ import {
   restoreTrash,
   getUnreadCount
 } from '@/api/user'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, getToken,setAccess,getAccess } from '@/libs/util'
 import { adminLogin } from '@/api/admin'
-
 export default {
   state: {
     userInfo: {}, // 登录人的信息
@@ -19,7 +18,7 @@ export default {
     userId: '',
     avatarImgPath: '',
     token: getToken(),
-    access: '',
+    access: getAccess(),
     hasGetInfo: false,
     unreadCount: 0,
     messageUnreadList: [],
@@ -105,7 +104,7 @@ export default {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('setToken', '')
-        //   commit('setAccess', [])
+          commit('setAccess', [])
           resolve()
         }).catch(err => {
           reject(err)

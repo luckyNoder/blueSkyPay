@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Alert>An info prompt</Alert>
+        <Alert>An info prompt11111</Alert>
     </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
         return {};
     },
     mounted() {
-        //
+        console.log(this.$store.state)
     }
 };
 </script>

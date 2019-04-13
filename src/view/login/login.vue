@@ -40,8 +40,9 @@
 </template>
 
 <script>
-import {adminlogin} from '../../api/index.js'
-import {setToken} from '@/libs/util.js'
+import {adminlogin,businesslogin} from '../../api/index.js'
+import {setToken,setbusniessID,setAccess} from '@/libs/util.js'
+ import {mapMutations} from 'vuex';
 export default {
     data() {
         return {
@@ -61,6 +62,9 @@ export default {
         };
     },
     methods: {
+        ...mapMutations({
+            // setAccess
+        }),
         handleSubmit() {
             var _this = this
             // if(!this.form.animal ){
@@ -82,6 +86,22 @@ export default {
                          adminlogin('/login/admin',params).then(res =>{
                             if(res.code === 200){
                                 setToken(res.info.Token)
+                                setAccess('admin')
+                                 this.$store.commit('setAccess',"admin")
+                                this.$router.push('/')
+                            }else{
+                                this.$Message.warning(res.info)
+                            }
+                        })
+                    }
+                    if(this.form.animal === '商户登录'){
+                        businesslogin('/login',params).then(res =>{
+                             if(res.code === 200){
+                                setToken(res.info.Token)
+                                setbusniessID(res.info.ID)
+                                setAccess('busniess')
+                                this.$store.commit('setAccess',"busniess")
+                                debugger
                                 this.$router.push('/')
                             }else{
                                 this.$Message.warning(res.info)

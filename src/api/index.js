@@ -30,6 +30,11 @@ axios.interceptors.response.use(function (response) {
 });
 
 
+
+
+/**
+ * 管理员列表 添加 删除  等操作
+*/
 export function adminlogin(url,data = {}){
     return new Promise((resolve, reject) => {
         axios.post(url,data)
@@ -38,10 +43,6 @@ export function adminlogin(url,data = {}){
         })
     })
 }
-
-/**
- * 管理员列表 添加 删除  等操作
-*/
 export const adminlist = (url,data = {}) =>{
     // let Token = getToken()
     return new Promise((resolve, reject) => {
@@ -90,6 +91,16 @@ export const allOrderListFun =  (url,data)=>{
 /**
  * business  商户列表的增删改查
 */
+
+// 商户登录
+export function businesslogin(url,data = {}){
+    return new Promise((resolve, reject) => {
+        axios.post(url,data)
+        .then(res => {
+            resolve(res.data);
+        })
+    })
+}
 
 // 获取商户列表
 export const businessList = (url , data ) =>{

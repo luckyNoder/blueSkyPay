@@ -16,6 +16,25 @@ export const getToken = () => {
   else return false
 }
 
+export const setAccess = (access) => {
+    sessionStorage['access'] = access
+}
+
+export const getAccess = () => {
+    const access = sessionStorage['access']
+    if (access) return access
+    else return false
+  }
+export const setbusniessID = (ID) => {
+    sessionStorage['getbusniessID'] = ID
+}
+
+export const getbusniessID = () => {
+    const getbusniessID = sessionStorage['getbusniessID']
+    if (token) return token
+    else return false
+}
+
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
 }
