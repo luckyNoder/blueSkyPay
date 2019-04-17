@@ -28,9 +28,9 @@ export default {
   },
   methods: {
     openErrorLoggerPage () {
-      this.$router.push({
-        name: 'error_logger_page'
-      })
+    //   this.$router.push({
+    //     name: 'error_logger_page'
+    //   })
     }
   }
 }

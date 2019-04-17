@@ -29,9 +29,6 @@ axios.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
-
-
-
 /**
  * 管理员列表 添加 删除  等操作
 */
@@ -153,6 +150,16 @@ export const infoUpdateFun = (url , data ) =>{
 export const updatePassFun = (url , data ) =>{
     return new Promise((resolve, reject) => {
         axios.post(url, data).then(res => {
+            resolve(res.data);
+        })
+    })
+}
+
+// 商户设备管理列表
+export const businessEquipment = (url , data ) =>{
+    return new Promise((resolve, reject) => {
+        axios.get(url,  {params: data})
+        .then(res => {
             resolve(res.data);
         })
     })

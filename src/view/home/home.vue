@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Alert>An info prompt11111</Alert>
+        <Alert>数据图表暂无</Alert>
     </div>
 </template>
 
@@ -9,7 +9,9 @@ export default {
     name: "home",
     components: {},
     data() {
-        return {};
+        return {
+
+        };
     },
     mounted() {
         console.log(this.$store.state)

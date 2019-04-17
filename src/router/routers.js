@@ -112,11 +112,71 @@ export default [
         ]
     },
     {
+        path: "/userCenter",
+        name: "userCenter",
+        meta: {
+            hideInBread: true,
+            access: ['busniess']
+        },
+        component: Main,
+        children: [
+            {
+                path: "userCenter",
+                name: "userCenter",
+                meta: {
+                    icon: "md-person",
+                    title: "个人中心"
+                },
+                component: () => import("@/view/userCenter/userCenter.vue")
+            }
+        ]
+    },
+    {
+        path: "/equipment",
+        name: "equipment",
+        meta: {
+            hideInBread: true,
+            access: ['busniess']
+        },
+        component: Main,
+        children: [
+            {
+                path: "equipment",
+                name: "equipment",
+                meta: {
+                    icon: "md-laptop",
+                    title: "设备管理"
+                },
+                component: () => import("@/view/equipment/equipment.vue")
+            }
+        ]
+    },
+    {
+        path: "/apiDocument",
+        name: "apiDocument",
+        meta: {
+            hideInBread: true,
+            access: ['busniess']
+        },
+        component: Main,
+        children: [
+            {
+                path: "apiDocument",
+                name: "apiDocument",
+                meta: {
+                    icon: "md-copy",
+                    title: "我的接口文档"
+                },
+                component: () => import("@/view/apiDocument/apiDocument.vue")
+            }
+        ]
+    },
+    {
         path: "/i18n",
         name: "i18n",
         meta: {
             hideInBread: true,
-            access: ['admin','busniess']
+            access: ['admin']
         },
         component: Main,
         children: [

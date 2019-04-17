@@ -49,7 +49,7 @@ export default {
             form: {
                 userName: this.userName,
                 password: this.password,
-                animal:''
+                animal:'商户登录'
             },
             rules: {
                 userName: [
@@ -81,9 +81,10 @@ export default {
                     if(!this.form.animal ){
                         this.$Message.info('请填写登录角色')
                         return
-                    }
+                    }``
                     if(this.form.animal === '管理员登录'){
                          adminlogin('/login/admin',params).then(res =>{
+                             debugger
                             if(res.code === 200){
                                 setToken(res.info.Token)
                                 setAccess('admin')
@@ -101,7 +102,6 @@ export default {
                                 setbusniessID(res.info.ID)
                                 setAccess('busniess')
                                 this.$store.commit('setAccess',"busniess")
-                                debugger
                                 this.$router.push('/')
                             }else{
                                 this.$Message.warning(res.info)

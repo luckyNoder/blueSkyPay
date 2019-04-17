@@ -66,7 +66,6 @@
             </p>
             <div style="text-align:center">
                 <RadioGroup v-model="busniessSatus">
-                    <Radio label="待审核"></Radio>
                     <Radio label="正常"></Radio>
                     <Radio label="冻结"></Radio>
                 </RadioGroup>
@@ -154,7 +153,8 @@ export default {
                 },
                 {
                     title: "操作",
-                    slot: "action"
+                    slot: "action",
+                    width:"300"
                 }
             ],
             data:[],
