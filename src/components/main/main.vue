@@ -110,7 +110,7 @@ export default {
     ]),
     ...mapActions([
       'handleLogin',
-      'getUnreadMessageCount'
+    //   'getUnreadMessageCount'
     ]),
     turnToPage (route) {
       let { name, params, query } = {}
@@ -181,7 +181,7 @@ export default {
       })
     }
     // 获取未读消息条数
-    this.getUnreadMessageCount()
+    // this.getUnreadMessageCount()
   }
 }
 </script>

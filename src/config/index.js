@@ -2,7 +2,7 @@ export default {
   /**
    * @description 配置显示在浏览器标签的title
    */
-  title: 'iView-admin',
+  title: '蓝天支付',
   /**
    * @description token在Cookie中存储的天数，默认1天
    */
@@ -18,7 +18,7 @@ export default {
    */
   baseUrl: {
     dev: 'http://47.100.161.132:8181',
-    pro: 'https://produce.com'
+    pro: 'http://47.100.161.132:8181'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

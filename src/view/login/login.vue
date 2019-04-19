@@ -88,7 +88,7 @@ export default {
                             if(res.code === 200){
                                 setToken(res.info.Token)
                                 setAccess('admin')
-                                 this.$store.commit('setAccess',"admin")
+                                this.$store.commit('setAccess',"admin")
                                 this.$router.push('/')
                             }else{
                                 this.$Message.warning(res.info)

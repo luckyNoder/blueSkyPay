@@ -23,7 +23,7 @@ export default [
         name: "login",
         meta: {
             title: "Login - 登录",
-            hideInMenu: true
+            hideInMenu: true,
         },
         component: () => import("@/view/login/login.vue")
     },
@@ -55,7 +55,8 @@ export default [
         name: "adminList",
         meta: {
             hideInBread: true,
-            access: ['admin']
+            access: ['admin'],
+            notCache: true,
         },
         component: Main,
         children: [
@@ -65,6 +66,7 @@ export default [
                 meta: {
                     icon: "logo-chrome",
                     title: "管理员用户",
+                    notCache: true,
                     // access: ['admin']
                 },
                 component: () => import("@/view/adminList/adminList.vue")
@@ -105,7 +107,8 @@ export default [
                 name: "adminOrderList",
                 meta: {
                     icon: "md-laptop",
-                    title: "所有订单列表"
+                    title: "所有订单列表",
+                    notCache: true
                 },
                 component: () => import("@/view/adminOrderList/adminOrderList.vue")
             }
@@ -191,170 +194,4 @@ export default [
             }
         ]
     }
-    // <Icon type="ios-alert-outline" /><Icon type="md-alert" />
-    // <Icon type="md-laptop" />
-    // {
-    //     path: '/error_store',
-    //     name: 'error_store',
-    //     meta: {
-    //         hideInBread: true
-    //     },
-    //     component: Main,
-    //     children: [{
-    //         path: 'error_store_page',
-    //         name: 'error_store_page',
-    //         meta: {
-    //             icon: 'ios-bug',
-    //             title: '错误收集'
-    //         },
-    //         component: () => import('@/view/error-store/error-store.vue')
-    //     }]
-    // },
-    // {
-    //     path: '/error_logger',
-    //     name: 'error_logger',
-    //     meta: {
-    //         hideInBread: true,
-    //         hideInMenu: true
-    //     },
-    //     component: Main,
-    //     children: [{
-    //         path: 'error_logger_page',
-    //         name: 'error_logger_page',
-    //         meta: {
-    //             icon: 'ios-bug',
-    //             title: '错误收集'
-    //         },
-    //         component: () => import('@/view/single-page/error-logger.vue')
-    //     }]
-    // },
-    // {
-    //     path: '/directive',
-    //     name: 'directive',
-    //     meta: {
-    //         hideInBread: true
-    //     },
-    //     component: Main,
-    //     children: [{
-    //         path: 'directive_page',
-    //         name: 'directive_page',
-    //         meta: {
-    //             icon: 'ios-navigate',
-    //             title: '指令'
-    //         },
-    //         component: () => import('@/view/directive/directive.vue')
-    //     }]
-    // },
-    // {
-    //     path: '/multilevel',
-    //     name: 'multilevel',
-    //     meta: {
-    //         icon: 'md-menu',
-    //         title: '多级菜单'
-    //     },
-    //     component: Main,
-    //     children: [{
-    //             path: 'level_2_1',
-    //             name: 'level_2_1',
-    //             meta: {
-    //                 icon: 'md-funnel',
-    //                 title: '二级-1'
-    //             },
-    //             component: () => import('@/view/multilevel/level-2-1.vue')
-    //         },
-    //         {
-    //             path: 'level_2_2',
-    //             name: 'level_2_2',
-    //             meta: {
-    //                 access: ['super_admin'],
-    //                 icon: 'md-funnel',
-    //                 showAlways: true,
-    //                 title: '二级-2'
-    //             },
-    //             component: parentView,
-    //             children: [{
-    //                     path: 'level_2_2_1',
-    //                     name: 'level_2_2_1',
-    //                     meta: {
-    //                         icon: 'md-funnel',
-    //                         title: '三级'
-    //                     },
-    //                     component: () => import('@/view/multilevel/level-2-2/level-2-2-1.vue')
-    //                 },
-    //                 {
-    //                     path: 'level_2_2_2',
-    //                     name: 'level_2_2_2',
-    //                     meta: {
-    //                         icon: 'md-funnel',
-    //                         title: '三级'
-    //                     },
-    //                     component: () => import('@/view/multilevel/level-2-2/level-2-2-2.vue')
-    //                 }
-    //             ]
-    //         },
-    //         {
-    //             path: 'level_2_3',
-    //             name: 'level_2_3',
-    //             meta: {
-    //                 icon: 'md-funnel',
-    //                 title: '二级-3'
-    //             },
-    //             component: () => import('@/view/multilevel/level-2-3.vue')
-    //         }
-    //     ]
-    // },
-    // {
-    //     path: '/argu',
-    //     name: 'argu',
-    //     meta: {
-    //         hideInMenu: true
-    //     },
-    //     component: Main,
-    //     children: [{
-    //             path: 'params/:id',
-    //             name: 'params',
-    //             meta: {
-    //                 icon: 'md-flower',
-    //                 title: route => `{{ params }}-${route.params.id}`,
-    //                 notCache: true,
-    //                 beforeCloseName: 'before_close_normal'
-    //             },
-    //             component: () => import('@/view/argu-page/params.vue')
-    //         },
-    //         {
-    //             path: 'query',
-    //             name: 'query',
-    //             meta: {
-    //                 icon: 'md-flower',
-    //                 title: route => `{{ query }}-${route.query.id}`,
-    //                 notCache: true
-    //             },
-    //             component: () => import('@/view/argu-page/query.vue')
-    //         }
-    //     ]
-    // },
-    // {
-    //     path: '/401',
-    //     name: 'error_401',
-    //     meta: {
-    //         hideInMenu: true
-    //     },
-    //     component: () => import('@/view/error-page/401.vue')
-    // },
-    // {
-    //     path: '/500',
-    //     name: 'error_500',
-    //     meta: {
-    //         hideInMenu: true
-    //     },
-    //     component: () => import('@/view/error-page/500.vue')
-    // },
-    // {
-    //     path: '*',
-    //     name: 'error_404',
-    //     meta: {
-    //         hideInMenu: true
-    //     },
-    //     component: () => import('@/view/error-page/404.vue')
-    // }
 ];

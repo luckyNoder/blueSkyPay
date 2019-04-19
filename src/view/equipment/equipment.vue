@@ -1,12 +1,5 @@
 <template>
     <div>
-        <!-- <Card shadow>
-            <div class="search_box">
-                <Form :label-width="80">
-                    <Button type="error" style="margin-left:10px" @click="addBusniess">新增商户</Button>
-                </Form>
-            </div>
-        </Card> -->
         <Card shadow style="margin-top:10px">
             <Row class="adminList_wrapper">
                 <Col span="24">
@@ -55,7 +48,7 @@ export default {
                 },
                  {
                     title: "WsId",
-                    slot: "WsId"
+                    key: "WsId"
                 },
                 {
                     title: "设备状态",

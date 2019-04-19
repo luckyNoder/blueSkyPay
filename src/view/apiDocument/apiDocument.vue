@@ -1,5 +1,15 @@
 <template>
     <div>
-        11111
+        <p>我的Api文档</p>
     </div>
 </template>
+
+<script>
+export default {
+    data(){
+        return {
+
+        }
+    }
+}
+</script>
